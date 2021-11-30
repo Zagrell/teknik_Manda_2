@@ -38,7 +38,7 @@ public class FriendService {
 
     public String addFriend(String[] splitBody) {
         try {
-            System.out.println("atempting to add friend");
+            System.out.println("attempting to add friend");
             setFields(splitBody);
             if(!destHost.equals(HOST)){
                 return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
