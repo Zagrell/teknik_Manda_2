@@ -1,15 +1,16 @@
 package com.example.teknik_manda_2.services;
 
+import com.example.teknik_manda_2.models.Friend;
 import com.example.teknik_manda_2.models.FriendRequest;
 import com.example.teknik_manda_2.models.FriendResponse;
 import com.example.teknik_manda_2.models.FriendUser;
 import com.example.teknik_manda_2.repos.FriendRequestRepo;
 import com.example.teknik_manda_2.repos.UserRepo;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FriendService {
@@ -40,10 +41,10 @@ public class FriendService {
                 return addFriend();
 
             case "accept":
-                return acceptFriend();
+                return receiveAcceptFriend();
 
             case "deny":
-                return denyFriend();
+                return receiveDenyFriend();
 
             case "remove":
                 return removeFriend();
@@ -58,43 +59,115 @@ public class FriendService {
     public String addFriend() {
         try {
             System.out.println("attempting to add friend");
-            if(!destHost.equals(HOST)){
+            if (!destHost.equals(HOST)) {
                 return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
             }
             Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
-            if(optionalUser.isEmpty()){
+            if (optionalUser.isEmpty()) {
                 return new FriendResponse(FriendResponse.NOT_FOUND).toString();
             }
             FriendUser foundUser = optionalUser.get();
-            FriendRequest friendRequest = new FriendRequest(sourceEmail,sourceHost,foundUser);
+            FriendRequest friendRequest = new FriendRequest(sourceEmail, sourceHost, foundUser);
             foundUser.addFriendRequest(friendRequest);
             friendRequestRepo.save(friendRequest);
-            System.out.println(foundUser.getRequests());
+            System.out.println(foundUser.getReceivedRequests());
 
             return new FriendResponse(FriendResponse.SUCCESS).toString();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
         }
     }
 
-    public String acceptFriend() {
+    public String receiveAcceptFriend() {
 
+        System.out.println("attempting to accept friend");
+        if (!destHost.equals(HOST)) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
 
+        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
+        if (optionalUser.isEmpty()) {
+            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
+        }
+
+        FriendUser foundUser = optionalUser.get();
+        FriendRequest foundRequest;
+
+        try {
+            foundRequest = foundUser.getSentFriendRequests().stream().filter(request ->
+                    (request.getExternalEmail().equals(sourceEmail) &&
+                            request.getExternalHost().equals(sourceHost))
+            ).collect(Collectors.toList()).get(0);
+        } catch (Exception e) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+
+        foundUser.addFriend(new Friend(sourceEmail, sourceHost));
+        foundUser.removeSentRequest(foundRequest);
 
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
-    public String denyFriend() {
+    public String receiveDenyFriend() {
+
+        System.out.println("attempting to deny friend");
+        if (!destHost.equals(HOST)) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+
+        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
+        if (optionalUser.isEmpty()) {
+            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
+        }
+
+        FriendUser foundUser = optionalUser.get();
+        FriendRequest foundRequest;
+
+        try {
+            foundRequest = foundUser.getSentFriendRequests().stream().filter(request ->
+                    (request.getExternalEmail().equals(sourceEmail) &&
+                            request.getExternalHost().equals(sourceHost))
+            ).collect(Collectors.toList()).get(0);
+        } catch (Exception e) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+
+        foundUser.removeSentRequest(foundRequest);
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
     public String removeFriend() {
+        System.out.println("attempting to remove friend");
+        if (!destHost.equals(HOST)) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+
+        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
+        if (optionalUser.isEmpty()) {
+            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
+        }
+
+        FriendUser foundUser = optionalUser.get();
+        Friend foundFriend;
+
+        try {
+            foundFriend = foundUser.getFriends().stream().filter(request ->
+                    (request.getEmail().equals(sourceEmail) &&
+                            request.getHost().equals(sourceHost))
+            ).collect(Collectors.toList()).get(0);
+        } catch (Exception e) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+
+        foundUser.removeFriend(foundFriend);
+
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
     public String blockFriend() {
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
+
 }

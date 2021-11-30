@@ -23,14 +23,30 @@ public class FriendUser {
     private String name;
 
     @JsonIgnore
-    @ManyToMany
-    private List<FriendUser> friends;
+    @OneToMany
+    private List<FriendRequest> sentFriendRequests;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "targetUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private List<FriendRequest> requests;
+    @OneToMany
+    private List<Friend> friends;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "ourUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<FriendRequest> receivedRequests;
 
     public void addFriendRequest(FriendRequest friendRequest) {
-        requests.add(friendRequest);
+        receivedRequests.add(friendRequest);
+    }
+
+    public void addFriend(Friend friend) {
+        friends.add(friend);
+    }
+
+    public void removeSentRequest(FriendRequest friendRequest) {
+        sentFriendRequests.remove(friendRequest);
+    }
+
+    public void removeFriend(Friend friend) {
+        friends.remove(friend);
     }
 }

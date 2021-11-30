@@ -1,6 +1,5 @@
 package com.example.teknik_manda_2.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,10 +14,10 @@ public class FriendRequest {
 
     }
 
-    public FriendRequest(String sourceEmail, String sourceHost,FriendUser targetUser) {
-        requestEmail = sourceEmail;
-        requestHost = sourceHost;
-        this.targetUser = targetUser;
+    public FriendRequest(String sourceEmail, String sourceHost,FriendUser ourUser) {
+        externalEmail = sourceEmail;
+        externalHost = sourceHost;
+        this.ourUser = ourUser;
 
     }
 
@@ -28,11 +27,12 @@ public class FriendRequest {
     private Integer id;
 
     @ManyToOne
-    private FriendUser targetUser;
+    private FriendUser ourUser;
 
     @Column
-    private String requestEmail;
+    private String externalEmail;
 
     @Column
-    private String requestHost;
+    private String externalHost;
+
 }
