@@ -28,18 +28,36 @@ public class FriendService {
     String destHost;
     String version;
 
-    private void setFields(String[] splitBody){
+    public String handleRequest(String[] splitBody) {
         sourceEmail = splitBody[1];
         sourceHost = splitBody[2];
         destEmail = splitBody[3];
         destHost = splitBody[4];
         version = splitBody[5];
+
+        switch (splitBody[0]) {
+            case "add":
+                return addFriend();
+
+            case "accept":
+                return acceptFriend();
+
+            case "deny":
+                return denyFriend();
+
+            case "remove":
+                return removeFriend();
+
+            case "block":
+                return blockFriend();
+            default:
+                return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
     }
 
-    public String addFriend(String[] splitBody) {
+    public String addFriend() {
         try {
             System.out.println("atempting to add friend");
-            setFields(splitBody);
             if(!destHost.equals(HOST)){
                 return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
             }
@@ -61,22 +79,22 @@ public class FriendService {
         }
     }
 
-    public String acceptFriend(String[] splitBody) {
+    public String acceptFriend() {
 
 
 
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
-    public String denyFriend(String[] splitBody) {
+    public String denyFriend() {
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
-    public String removeFriend(String[] splitBody) {
+    public String removeFriend() {
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 
-    public String blockFriend(String[] splitBody) {
+    public String blockFriend() {
         return new FriendResponse(FriendResponse.SUCCESS).toString();
     }
 }

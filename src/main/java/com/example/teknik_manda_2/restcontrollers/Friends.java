@@ -18,26 +18,8 @@ public class Friends {
 
         System.out.println(body);
         String[] splitBody = body.toLowerCase().split(" ");
-        switch (splitBody[0]) {
-            case "add":
-                return friendService.addFriend(splitBody);
-
-            case "accept":
-                return friendService.acceptFriend(splitBody);
-
-            case "deny":
-                return friendService.denyFriend(splitBody);
-
-            case "remove":
-                return friendService.removeFriend(splitBody);
-
-            case "block":
-                return friendService.blockFriend(splitBody);
-            default:
-                return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-        }
+        return friendService.handleRequest(splitBody);
     }
-
 
 
 }

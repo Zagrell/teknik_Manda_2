@@ -17,6 +17,9 @@ public class FriendUser {
     private String email;
 
     @Column
+    private String host;
+
+    @Column
     private String name;
 
     @JsonIgnore
@@ -24,7 +27,7 @@ public class FriendUser {
     private List<FriendUser> friends;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "friendUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "targetUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<FriendRequest> requests;
 
     public void addFriendRequest(FriendRequest friendRequest) {

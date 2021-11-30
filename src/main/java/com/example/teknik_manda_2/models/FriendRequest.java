@@ -15,10 +15,10 @@ public class FriendRequest {
 
     }
 
-    public FriendRequest(String sourceEmail, String sourceHost,FriendUser friendUser) {
+    public FriendRequest(String sourceEmail, String sourceHost,FriendUser targetUser) {
         requestEmail = sourceEmail;
         requestHost = sourceHost;
-        this.friendUser = friendUser;
+        this.targetUser = targetUser;
 
     }
 
@@ -28,8 +28,7 @@ public class FriendRequest {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "email", nullable = false)
-    private FriendUser friendUser;
+    private FriendUser targetUser;
 
     @Column
     private String requestEmail;
