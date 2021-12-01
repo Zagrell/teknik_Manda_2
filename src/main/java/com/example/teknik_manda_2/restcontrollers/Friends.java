@@ -14,7 +14,7 @@ public class Friends {
     @Autowired
     FriendService friendService;
 
-    @PostMapping("/")
+    @PostMapping("/friendship")
     public String friendProtocol(@RequestBody String body) {
 
         System.out.println(body);

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-@ToString(exclude = {"friends","requests"})
+@ToString(exclude = {"friends"})
 public class FriendUser {
 
     @Id
@@ -46,4 +46,6 @@ public class FriendUser {
     public void removeFriend(Friend friend) {
         friends.remove(friend);
     }
+
+    public void addSentFriendRequest(FriendRequest friendRequest) { sentFriendRequests.add(friendRequest); }
 }

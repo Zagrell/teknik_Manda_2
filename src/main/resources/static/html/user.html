@@ -8,15 +8,17 @@
 
 <div id="user-info"></div>
 
-<div>
-    <input id="dest-email" type="text">
-    <input id="dest-host" type="text">
-    <select id="method" name="method">
+<form action="/sendRequest" method="post">
+    <input type="hidden" id="src-email" name="srcEmail">
+    <input type="hidden" id="src-host" name="srcHost">
+    <label for="dest-email">email</label><input id="dest-email" name="destEmail" type="text">
+    <label for="dest-host">host</label><input id="dest-host" name="destHost" type="text">
+    <label for="method">method</label><select id="method" name="method">
         <option value="add">Friend Request</option>
         <option value="block">Block</option>
     </select>
-    <button id="request-button">Send Request</button>
-</div>
+    <button type="submit" id="request-button">Send Request</button>
+</form>
 
 <table class="center">
     <caption><h2>Friends</h2></caption>

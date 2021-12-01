@@ -4,6 +4,7 @@ import com.example.teknik_manda_2.models.Friend;
 import com.example.teknik_manda_2.models.FriendRequest;
 import com.example.teknik_manda_2.models.FriendResponse;
 import com.example.teknik_manda_2.models.FriendUser;
+import com.example.teknik_manda_2.repos.FriendRepo;
 import com.example.teknik_manda_2.repos.FriendRequestRepo;
 import com.example.teknik_manda_2.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class FriendService {
 
     @Autowired
     FriendRequestRepo friendRequestRepo;
+
+    @Autowired
+    FriendRepo friendRepo;
 
     public static final String HOST = "http://localhost:8080";
 
@@ -38,11 +42,11 @@ public class FriendService {
         version = splitBody[5];
 
         if (!destHost.equals(HOST)) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST, "bad_host").toString();
         }
         Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
         if (optionalUser.isEmpty()) {
-            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
+            return new FriendResponse(FriendResponse.NOT_FOUND, "no_user_with_that_email").toString();
         }
         foundUser = optionalUser.get();
 
@@ -53,7 +57,7 @@ public class FriendService {
             case "deny" -> receiveDenyFriend();
             case "remove" -> removeFriend();
             case "block" -> blockFriend();
-            default -> new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            default -> new FriendResponse(FriendResponse.BAD_REQUEST, "bad_method").toString();
         };
     }
 
@@ -64,13 +68,13 @@ public class FriendService {
             FriendRequest friendRequest = new FriendRequest(sourceEmail, sourceHost, foundUser);
             foundUser.addFriendRequest(friendRequest);
             friendRequestRepo.save(friendRequest);
-            System.out.println(foundUser.getReceivedRequests());
+            userRepo.save(foundUser);
 
-            return new FriendResponse(FriendResponse.SUCCESS).toString();
+            return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST,"OK").toString();
         }
     }
 
@@ -85,13 +89,17 @@ public class FriendService {
                             request.getExternalHost().equals(sourceHost))
             ).collect(Collectors.toList()).get(0);
         } catch (Exception e) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST,"our_user_never_sent_friend_request").toString();
         }
 
-        foundUser.addFriend(new Friend(sourceEmail, sourceHost));
+        Friend friend = new Friend(sourceEmail, sourceHost);
+        foundUser.addFriend(friend);
         foundUser.removeSentRequest(foundRequest);
 
-        return new FriendResponse(FriendResponse.SUCCESS).toString();
+        friendRepo.save(friend);
+        userRepo.save(foundUser);
+
+        return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
     }
 
     public String receiveDenyFriend() {
@@ -105,11 +113,13 @@ public class FriendService {
                             request.getExternalHost().equals(sourceHost))
             ).collect(Collectors.toList()).get(0);
         } catch (Exception e) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST, "our_user_never_sent_friend_request").toString();
         }
 
         foundUser.removeSentRequest(foundRequest);
-        return new FriendResponse(FriendResponse.SUCCESS).toString();
+
+        userRepo.save(foundUser);
+        return new FriendResponse(FriendResponse.SUCCESS, "OK").toString();
     }
 
     public String removeFriend() {
@@ -123,16 +133,16 @@ public class FriendService {
                             request.getHost().equals(sourceHost))
             ).collect(Collectors.toList()).get(0);
         } catch (Exception e) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST, "were_not_friends").toString();
         }
 
         foundUser.removeFriend(foundFriend);
-
-        return new FriendResponse(FriendResponse.SUCCESS).toString();
+        userRepo.save(foundUser);
+        return new FriendResponse(FriendResponse.SUCCESS, "OK").toString();
     }
 
     public String blockFriend() {
-        return new FriendResponse(FriendResponse.SUCCESS).toString();
+        return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
     }
 
 }

@@ -19,15 +19,13 @@ public class FriendResponse {
     public FriendResponse() {
     }
 
-    public FriendResponse(int status){
-        this.status= status;
+    public FriendResponse(int status, String phrase){
+        this.status = status;
+        this.phrase = phrase;
     }
 
     @Override
     public String toString() {
-        return "FriendResponse{" +
-                "status=" + status +
-                ", phrase='" + phrase + '\'' +
-                '}';
+        return "" + 1 + " " + status + " " + phrase + "\r\n";
     }
 }
