@@ -28,6 +28,7 @@ public class FriendService {
     String destEmail;
     String destHost;
     String version;
+    FriendUser foundUser;
 
     public String handleRequest(String[] splitBody) {
         sourceEmail = splitBody[1];
@@ -36,7 +37,18 @@ public class FriendService {
         destHost = splitBody[4];
         version = splitBody[5];
 
+        if (!destHost.equals(HOST)) {
+            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        }
+        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
+        if (optionalUser.isEmpty()) {
+            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
+        }
+        foundUser = optionalUser.get();
+
+
         switch (splitBody[0]) {
+
             case "add":
                 return addFriend();
 
@@ -59,14 +71,7 @@ public class FriendService {
     public String addFriend() {
         try {
             System.out.println("attempting to add friend");
-            if (!destHost.equals(HOST)) {
-                return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-            }
-            Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
-            if (optionalUser.isEmpty()) {
-                return new FriendResponse(FriendResponse.NOT_FOUND).toString();
-            }
-            FriendUser foundUser = optionalUser.get();
+
             FriendRequest friendRequest = new FriendRequest(sourceEmail, sourceHost, foundUser);
             foundUser.addFriendRequest(friendRequest);
             friendRequestRepo.save(friendRequest);
@@ -83,16 +88,6 @@ public class FriendService {
     public String receiveAcceptFriend() {
 
         System.out.println("attempting to accept friend");
-        if (!destHost.equals(HOST)) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-        }
-
-        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
-        if (optionalUser.isEmpty()) {
-            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
-        }
-
-        FriendUser foundUser = optionalUser.get();
         FriendRequest foundRequest;
 
         try {
@@ -113,16 +108,6 @@ public class FriendService {
     public String receiveDenyFriend() {
 
         System.out.println("attempting to deny friend");
-        if (!destHost.equals(HOST)) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-        }
-
-        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
-        if (optionalUser.isEmpty()) {
-            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
-        }
-
-        FriendUser foundUser = optionalUser.get();
         FriendRequest foundRequest;
 
         try {
@@ -140,16 +125,7 @@ public class FriendService {
 
     public String removeFriend() {
         System.out.println("attempting to remove friend");
-        if (!destHost.equals(HOST)) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-        }
 
-        Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
-        if (optionalUser.isEmpty()) {
-            return new FriendResponse(FriendResponse.NOT_FOUND).toString();
-        }
-
-        FriendUser foundUser = optionalUser.get();
         Friend foundFriend;
 
         try {
