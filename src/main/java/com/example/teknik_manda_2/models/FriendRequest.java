@@ -1,6 +1,8 @@
 package com.example.teknik_manda_2.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -26,6 +28,8 @@ public class FriendRequest {
     @Column
     private Integer id;
 
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToOne
     private FriendUser ourUser;
 

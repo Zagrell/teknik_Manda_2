@@ -21,7 +21,7 @@ public class FriendService {
     @Autowired
     FriendRequestRepo friendRequestRepo;
 
-    public static final String HOST = "hostyhost";
+    public static final String HOST = "http://localhost:8080";
 
     String sourceEmail;
     String sourceHost;
@@ -47,25 +47,14 @@ public class FriendService {
         foundUser = optionalUser.get();
 
 
-        switch (splitBody[0]) {
-
-            case "add":
-                return addFriend();
-
-            case "accept":
-                return receiveAcceptFriend();
-
-            case "deny":
-                return receiveDenyFriend();
-
-            case "remove":
-                return removeFriend();
-
-            case "block":
-                return blockFriend();
-            default:
-                return new FriendResponse(FriendResponse.BAD_REQUEST).toString();
-        }
+        return switch (splitBody[0]) {
+            case "add" -> addFriend();
+            case "accept" -> receiveAcceptFriend();
+            case "deny" -> receiveDenyFriend();
+            case "remove" -> removeFriend();
+            case "block" -> blockFriend();
+            default -> new FriendResponse(FriendResponse.BAD_REQUEST).toString();
+        };
     }
 
     public String addFriend() {

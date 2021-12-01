@@ -22,15 +22,12 @@ public class FriendUser {
     @Column
     private String name;
 
-    @JsonIgnore
     @OneToMany
     private List<FriendRequest> sentFriendRequests;
 
-    @JsonIgnore
     @OneToMany
     private List<Friend> friends;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "ourUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<FriendRequest> receivedRequests;
 

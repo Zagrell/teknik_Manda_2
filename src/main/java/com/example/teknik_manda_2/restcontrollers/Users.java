@@ -2,6 +2,7 @@ package com.example.teknik_manda_2.restcontrollers;
 
 import com.example.teknik_manda_2.models.FriendUser;
 import com.example.teknik_manda_2.repos.UserRepo;
+import com.example.teknik_manda_2.services.FriendService;
 import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class Users {
 
     @PostMapping("/users")
     public FriendUser addUser(@RequestBody FriendUser newFriendUser) {
+        newFriendUser.setHost(FriendService.HOST);
         return userRepo.save(newFriendUser);
     }
 

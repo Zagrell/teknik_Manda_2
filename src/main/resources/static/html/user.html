@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="user-info"></div>
+
+<div>
+    <input id="dest-email" type="text">
+    <input id="dest-host" type="text">
+    <select id="method" name="method">
+        <option value="add">Friend Request</option>
+        <option value="block">Block</option>
+    </select>
+    <button id="request-button">Send Request</button>
+</div>
+
+<table class="center">
+    <caption><h2>Friends</h2></caption>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody id="friends-tbody"></tbody>
+</table>
+
+<table class="center">
+    <caption><h2>Friends Requests</h2></caption>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody id="received-friend-requests-tbody"></tbody>
+</table>
+
+<table class="center">
+    <caption><h2>Want to be frends with u</h2></caption>
+    <thead>
+    <tr>
+        <th>Email</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody id="sent-friend-requests-tbody"></tbody>
+</table>
+
+
+</body>
+
+<script src="../scripts/user.js"></script>
+
+</html>

@@ -24,4 +24,8 @@ public class Friend {
         this.email = email;
         this.host = host;
     }
+
+    public Friend() {
+
+    }
 }
