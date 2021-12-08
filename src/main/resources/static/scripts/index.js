@@ -9,6 +9,8 @@ fetch("/users")
     .then(response => response.json())
     .then(results => results.map(createTableRow));
 
+
+
 document.getElementById("add-button").addEventListener("click", () => {
 
     const user = {

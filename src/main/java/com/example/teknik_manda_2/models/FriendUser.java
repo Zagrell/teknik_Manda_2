@@ -28,7 +28,7 @@ public class FriendUser {
     @OneToMany
     private List<Friend> friends;
 
-    @OneToMany(mappedBy = "ourUser", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @OneToMany
     private List<FriendRequest> receivedRequests;
 
     public void addFriendRequest(FriendRequest friendRequest) {
@@ -47,5 +47,7 @@ public class FriendUser {
         friends.remove(friend);
     }
 
-    public void addSentFriendRequest(FriendRequest friendRequest) { sentFriendRequests.add(friendRequest); }
+    public void addSentFriendRequest(FriendRequest friendRequest) {
+        sentFriendRequests.add(friendRequest);
+    }
 }
