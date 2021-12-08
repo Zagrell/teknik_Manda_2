@@ -43,11 +43,36 @@ public class FriendUser {
         sentFriendRequests.remove(friendRequest);
     }
 
-    public void removeFriend(Friend friend) {
-        friends.remove(friend);
+    public FriendRequest findSentRequest(String email) {
+        for (FriendRequest friendRequest : sentFriendRequests) {
+            if (friendRequest.getExternalEmail().equals(email)) {
+                return friendRequest;
+            }
+        }
+        return null;
     }
+
+    public FriendRequest findReceivedRequest(String email) {
+        for (FriendRequest friendRequest : receivedRequests) {
+            if (friendRequest.getExternalEmail().equals(email)) {
+                return friendRequest;
+            }
+        }
+        return null;
+    }
+
+    public void removeReceivedRequest(FriendRequest friendRequest) {
+        receivedRequests.remove(friendRequest);
+    }
+
 
     public void addSentFriendRequest(FriendRequest friendRequest) {
         sentFriendRequests.add(friendRequest);
     }
+
+    public void removeFriend(Friend friend) {
+        friends.remove(friend);
+    }
+
+
 }

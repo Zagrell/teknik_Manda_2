@@ -65,13 +65,33 @@ function fillReceivedFriendTable(receivedRequest) {
     const requestRow = document.createElement("tr");
 
     requestRow.innerHTML = `
-    <td>
+
+<td>
     <p>${receivedRequest.externalEmail}</p>
-    </td>
-    <td>
-    <p>${receivedRequest.externalHost}</p>
 </td>
+<td>
+    <p>${receivedRequest.externalHost}</p>
+</td> 
     `;
+
+
+const form = document.createElement('form');
+form.innerHTML = `
+
+    <input type="hidden" value="${email}" name="srcEmail">
+    <input type="hidden" value="${host}" name="srcHost">
+    <input type="hidden" value="${receivedRequest.externalEmail}" name="destEmail">
+    <input type="hidden" value="${receivedRequest.externalHost}" name="destHost">
+    <input type="hidden" value="accept" name="method">
+    <button type="submit">Accept</button>
+`;
+
+    const td = document.createElement('td');
+    form.method = "post";
+    form.action = "/sendRequest";
+
+    td.appendChild(form);
+    requestRow.appendChild(td);
 
     requestTbody.appendChild(requestRow);
 }
@@ -80,9 +100,9 @@ function fillSentRequestTable(sentRequest) {
     const requestRow = document.createElement("tr");
 
     requestRow.innerHTML = `
-     <td>
+<td>
     <p>${sentRequest.externalEmail}</p>
-    </td>
+</td>
     <td>
     <p>${sentRequest.externalHost}</p>
 </td>
