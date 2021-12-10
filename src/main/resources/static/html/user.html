@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="../stylesheets/user.css">
 </head>
 <body>
 
@@ -11,9 +12,9 @@
 <form action="/sendRequest" method="post">
     <input type="hidden" id="src-email" name="srcEmail">
     <input type="hidden" id="src-host" name="srcHost">
-    <label for="dest-email">email</label><input id="dest-email" name="destEmail" type="text">
-    <label for="dest-host">host</label><input id="dest-host" name="destHost" type="text">
-    <label for="method">method</label><select id="method" name="method">
+    <label for="dest-email">Email</label><input id="dest-email" name="destEmail" type="text">
+    <label for="dest-host">Host</label><input id="dest-host" name="destHost" type="text">
+    <label for="method">Method</label><select id="method" name="method">
         <option value="add">Friend Request</option>
         <option value="block">Block</option>
     </select>

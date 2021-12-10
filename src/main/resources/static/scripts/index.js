@@ -15,6 +15,7 @@ document.getElementById("add-button").addEventListener("click", () => {
 
     const user = {
         email : document.getElementById("add-email").value,
+        email : document.getElementById("add-email").value,
         name : document.getElementById("add-name").value
     };
 
