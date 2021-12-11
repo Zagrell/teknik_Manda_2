@@ -8,6 +8,7 @@ import com.example.teknik_manda_2.repos.FriendRepo;
 import com.example.teknik_manda_2.repos.FriendRequestRepo;
 import com.example.teknik_manda_2.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -25,7 +26,12 @@ public class FriendService {
     @Autowired
     FriendRepo friendRepo;
 
-    public static final String HOST = "http://localhost:8080";
+    public static String host;
+
+    @Autowired
+    public void setHost(@Value("${hostname}") String host) {
+        this.host = host;
+    }
 
     String sourceEmail;
     String sourceHost;
@@ -41,7 +47,7 @@ public class FriendService {
         destHost = splitBody[4];
         version = splitBody[5];
 
-        if (!destHost.equals(HOST)) {
+        if (!destHost.equals(host)) {
             return new FriendResponse(FriendResponse.BAD_REQUEST, "bad_host").toString();
         }
         Optional<FriendUser> optionalUser = userRepo.findById(destEmail);
@@ -70,11 +76,11 @@ public class FriendService {
             friendRequestRepo.save(friendRequest);
             userRepo.save(foundUser);
 
-            return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
+            return new FriendResponse(FriendResponse.SUCCESS, "OK").toString();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new FriendResponse(FriendResponse.BAD_REQUEST,"OK").toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST, "OK").toString();
         }
     }
 
@@ -89,7 +95,7 @@ public class FriendService {
                             request.getExternalHost().equals(sourceHost))
             ).collect(Collectors.toList()).get(0);
         } catch (Exception e) {
-            return new FriendResponse(FriendResponse.BAD_REQUEST,"our_user_never_sent_friend_request").toString();
+            return new FriendResponse(FriendResponse.BAD_REQUEST, "our_user_never_sent_friend_request").toString();
         }
 
         Friend friend = new Friend(sourceEmail, sourceHost);
@@ -99,7 +105,7 @@ public class FriendService {
         friendRepo.save(friend);
         userRepo.save(foundUser);
 
-        return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
+        return new FriendResponse(FriendResponse.SUCCESS, "OK").toString();
     }
 
     public String receiveDenyFriend() {
@@ -142,7 +148,7 @@ public class FriendService {
     }
 
     public String blockFriend() {
-        return new FriendResponse(FriendResponse.SUCCESS,"OK").toString();
+        return new FriendResponse(FriendResponse.SUCCESS, "OK").toString();
     }
 
 }

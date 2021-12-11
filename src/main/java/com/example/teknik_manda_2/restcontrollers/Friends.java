@@ -1,6 +1,5 @@
 package com.example.teknik_manda_2.restcontrollers;
 
-import com.example.teknik_manda_2.models.FriendResponse;
 import com.example.teknik_manda_2.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +23,7 @@ public class Friends {
 
     @GetMapping("/host")
     public String getHostName(){
-        return FriendService.HOST;
+        return FriendService.host;
     }
 
 

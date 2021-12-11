@@ -43,6 +43,7 @@ public class FriendsController {
 
         System.out.println(request);
         ResponseEntity<String> response = restTemplate.postForEntity(request.getDestHost()+"/friendship", request.toString(), String.class);
+
         if(request.getMethod().equals("add") && response.getBody().substring(2,5).equals("200")){
             System.out.println("hej");
             FriendUser friendUser = userRepo.getById(request.getSrcEmail());
